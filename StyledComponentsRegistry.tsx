@@ -1,16 +1,24 @@
 'use client';
 
-import React from 'react';
-import { StyleSheetManager } from 'styled-components';
+import React, { useState } from 'react';
+import { useServerInsertedHTML } from 'next/navigation';
+import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
 export default function StyledComponentsRegistry({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // This will work both during server-side rendering and client rendering
+  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
+
+  useServerInsertedHTML(() => {
+    const styles = styledComponentsStyleSheet.getStyleElement();
+    styledComponentsStyleSheet.instance.clearTag(); // Prevent duplicate styles
+    return <>{styles}</>;
+  });
+
   return (
-    <StyleSheetManager shouldForwardProp={() => true}>
+    <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
       {children}
     </StyleSheetManager>
   );
