@@ -1,17 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { ServerStyleSheet, StyleSheetManager } from "styled-components";
+import React from 'react';
+import { StyleSheetManager } from 'styled-components';
 
 export default function StyledComponentsRegistry({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sheet] = useState(() => new ServerStyleSheet());
-
+  // This will work both during server-side rendering and client rendering
   return (
-    <StyleSheetManager sheet={sheet.instance}>
+    <StyleSheetManager shouldForwardProp={() => true}>
       {children}
     </StyleSheetManager>
   );
