@@ -1,10 +1,13 @@
-// app/registry.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
+import React, { useState } from "react";
+import { ServerStyleSheet, StyleSheetManager } from "styled-components";
 
-export default function StyledComponentsRegistry({ children }: { children: React.ReactNode }) {
+export default function StyledComponentsRegistry({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [sheet] = useState(() => new ServerStyleSheet());
 
   return (
@@ -13,4 +16,3 @@ export default function StyledComponentsRegistry({ children }: { children: React
     </StyleSheetManager>
   );
 }
-// app/globalStyles.ts

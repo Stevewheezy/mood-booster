@@ -1,4 +1,3 @@
-// app/challenge/page.tsx
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
@@ -54,32 +53,37 @@ const Button = styled.button`
 const ChallengePage = () => {
   const [completed, setCompleted] = useState(false);
   const [quote, setQuote] = useState("");
-const [audio] = useState(typeof Audio !== 'undefined' ? new Audio('/sounds/calm.mp3') : null);
-const challenge = {
+  const [audio] = useState(
+    typeof Audio !== "undefined" ? new Audio("/sounds/calm.mp3") : null
+  );
+  const challenge = {
     title: "Gratitude Flash",
     description: "Write down 3 things you're grateful for today.",
-};
+  };
 
-useEffect(() => {
+  useEffect(() => {
     if (audio) {
-        audio.loop = true;
-        audio.volume = 0.2;
-        audio.play().catch(error => console.log('Audio playback error:', error));
+      audio.loop = true;
+      audio.volume = 0.2;
+      audio.play().catch((error) => console.log("Audio playback error:", error));
     }
     return () => {
-        if (audio) {
-            audio.pause();
-            audio.currentTime = 0;
-        }
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
     };
-}, [audio]);
+  }, [audio]);
 
-  const motivationalQuotes = useMemo(() => [
-    "Small steps every day lead to big changes.",
-    "You are doing better than you think.",
-    "A grateful heart is a magnet for miracles.",
-    "Peace begins with a smile.",
-  ], []);
+  const motivationalQuotes = useMemo(
+    () => [
+      "Small steps every day lead to big changes.",
+      "You are doing better than you think.",
+      "A grateful heart is a magnet for miracles.",
+      "Peace begins with a smile.",
+    ],
+    []
+  );
 
   useEffect(() => {
     const savedStatus = localStorage.getItem("challenge-completed");
@@ -95,8 +99,7 @@ useEffect(() => {
       motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
     setQuote(randomQuote);
 
-    return () => {
-    };
+    return () => {};
   }, [motivationalQuotes]);
 
   const handleComplete = () => {
@@ -112,11 +115,14 @@ useEffect(() => {
     localStorage.setItem("challenge-date", today);
 
     setCompleted(true);
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
+
+    if (typeof window !== "undefined") {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
   };
 
   return (

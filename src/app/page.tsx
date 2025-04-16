@@ -62,6 +62,7 @@ const challenges = [
   },
 ];
 
+// Moved outside the component to avoid redefinition on every render
 const getDayOfYear = () => {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
@@ -82,26 +83,28 @@ export default function Home() {
   const todayChallenge = challenges[getDayOfYear() % challenges.length];
 
   useEffect(() => {
-    const today = new Date().toDateString();
-    const lastDate = localStorage.getItem("lastChallengeDate");
-    const storedStreak = parseInt(localStorage.getItem("streakCount") || "0");
+    if (typeof window !== "undefined") {
+      const today = new Date().toDateString();
+      const lastDate = localStorage.getItem("lastChallengeDate");
+      const storedStreak = parseInt(localStorage.getItem("streakCount") || "0");
 
-    if (lastDate === today) {
-      setStreak(storedStreak); // already played today
-    } else {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      if (lastDate === yesterday.toDateString()) {
-        const newStreak = storedStreak + 1;
-        setStreak(newStreak);
-        localStorage.setItem("streakCount", newStreak.toString());
+      if (lastDate === today) {
+        setStreak(storedStreak); // already played today
       } else {
-        setStreak(1); // reset
-        localStorage.setItem("streakCount", "1");
-      }
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
 
-      localStorage.setItem("lastChallengeDate", today);
+        if (lastDate === yesterday.toDateString()) {
+          const newStreak = storedStreak + 1;
+          setStreak(newStreak);
+          localStorage.setItem("streakCount", newStreak.toString());
+        } else {
+          setStreak(1); // reset
+          localStorage.setItem("streakCount", "1");
+        }
+
+        localStorage.setItem("lastChallengeDate", today);
+      }
     }
   }, []);
 
